@@ -1,0 +1,50 @@
+{
+  "name": "@gbesse/agent-mandates",
+  "version": "0.1.0",
+  "description": "Bound agent actions with signed mandates, attenuated delegation and an idempotent budget ledger.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.mts",
+      "import": "./src/index.mjs"
+    },
+    "./jev": {
+      "types": "./src/jev.d.mts",
+      "import": "./src/jev.mjs"
+    }
+  },
+  "bin": {
+    "agent-mandates": "./bin/agent-mandates.mjs"
+  },
+  "files": [
+    "src",
+    "bin",
+    "examples",
+    "packs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "typecheck": "tsc --noEmit --strict --target ES2022 --module NodeNext docs/public-api-types.mts",
+    "test": "node --test",
+    "demo": "node examples/demo.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gbesse/agent-mandates.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gbesse/agent-mandates/issues"
+  },
+  "dependencies": {
+    "@gbesse/decisionpacks": "github:gbesse/decisionpacks#3c90b6e667c16653b9a6ae00b376df9bddbd8461"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

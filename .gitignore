@@ -1,0 +1,8 @@
+# Purpose: Exclude credentials, dependencies and local working data.
+node_modules/
+.env
+.env.*
+!.env.example
+local-data/
+*.log
+.DS_Store
