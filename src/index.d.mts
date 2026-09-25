@@ -8,6 +8,8 @@ export interface ActionRequest { requestId: string; actor: string; audience: str
 export interface Receipt { id: string; requestId: string; grantId: string; ancestorIds: string[]; costMinor: number; digest: string; reservedAt: string }
 export type Reservation = { status: 'reserved'; execute: true; receipt: Receipt } | { status: 'duplicate'; execute: false; receipt: Receipt };
 export interface AuditEvent { sequence: number; at: string; type: string; details: Record<string, string> }
-export interface Authority { issue(input: GrantInput): Promise<string>; delegate(parentToken: string, input: Delegation): Promise<string>; inspect(token: string): { grant: Grant; usage: { calls: number; budgetMinor: number } }; reserve(token: string, request: ActionRequest): Promise<Reservation>; revoke(token: string, reason: string): Promise<void>; snapshot(): string; audit(): AuditEvent[] }
+export interface Usage { calls: number; budgetMinor: number }
+export interface Inspection { grant: Grant; usage: Usage; remaining: Usage }
+export interface Authority { issue(input: GrantInput): Promise<string>; delegate(parentToken: string, input: Delegation): Promise<string>; inspect(token: string): Inspection; reserve(token: string, request: ActionRequest): Promise<Reservation>; revoke(token: string, reason: string): Promise<void>; snapshot(): string; audit(): AuditEvent[] }
 export interface AuthorityOptions { secret: string | Uint8Array; snapshot?: string; now?: () => number; persist?: (signedSnapshot: string, revisions: { previousRevision: number; revision: number }) => Promise<void>; persistTimeoutMs?: number }
 export function createAuthority(options: AuthorityOptions): Authority;
