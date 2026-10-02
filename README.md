@@ -23,10 +23,14 @@ The repeated request returns `execute: false` and the charge remains 200 minor u
 
 **The file CLI is a sequential demonstration.** Always use its newest snapshot. Copying an old file or using two authority processes can reuse a budget. Use an authoritative durable store with compare-and-swap revisions for real gateways; see [the persistence contract](docs/persistence.md).
 
+## Watch the budget stop a second action
+
+`npm run demo:budget` issues a synthetic mandate with 300 minor units, reserves one 200-unit draft and rejects a different 200-unit draft. The report shows the remaining budget without executing any tool. This example uses an in-memory authority; a real gateway still needs the durable compare-and-swap store described below.
+
 ## Embed it at a trusted tool gateway
 
 ```sh
-npm install github:gbesse/agent-mandates#v0.1.0
+npm install github:gbesse/agent-mandates#v0.1.1
 ```
 
 ```js
