@@ -1,6 +1,6 @@
 {
   "name": "@gbesse/agent-mandates",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bound agent actions with signed mandates, attenuated delegation and an idempotent budget ledger.",
   "type": "module",
   "exports": {
@@ -28,7 +28,8 @@
     "check": "node scripts/check.mjs",
     "typecheck": "tsc --noEmit --strict --target ES2022 --module NodeNext docs/public-api-types.mts",
     "test": "node --test",
-    "demo": "node examples/demo.mjs"
+    "demo": "node examples/demo.mjs",
+    "demo:budget": "node examples/budget-exhaustion.mjs"
   },
   "engines": {
     "node": ">=22"
