@@ -82,6 +82,15 @@ export function createAuthority({ secret, snapshot, now = Date.now, persist, per
     const rows = ledger.reservations.filter(r => r.ancestorIds.includes(id));
     return { calls: rows.length, budgetMinor: rows.reduce((sum, r) => sum + r.costMinor, 0) };
   }
+  function remaining(ancestors) {
+    return ancestors.reduce((result, grant) => {
+      const used = usage(grant.id);
+      return {
+        calls: Math.min(result.calls, grant.maxCalls - used.calls),
+        budgetMinor: Math.min(result.budgetMinor, grant.budgetMinor - used.budgetMinor),
+      };
+    }, { calls: Number.MAX_SAFE_INTEGER, budgetMinor: Number.MAX_SAFE_INTEGER });
+  }
   return {
     issue(input) {
       input = structuredClone(input);
@@ -106,7 +115,10 @@ export function createAuthority({ secret, snapshot, now = Date.now, persist, per
         const next = structuredClone(ledger); next.grants.push(child); append(next, 'mandate.delegated', { parentId: parent.id, id: child.id, subject: child.subject }); await commit(next); return seal(child, 'am1');
       });
     },
-    inspect(token) { const ancestors = chain(token); return { grant: structuredClone(ancestors[0]), usage: usage(ancestors[0].id) }; },
+    inspect(token) {
+      const ancestors = chain(token);
+      return { grant: structuredClone(ancestors[0]), usage: usage(ancestors[0].id), remaining: remaining(ancestors) };
+    },
     reserve(token, request) {
       request = structuredClone(request);
       return queued(async () => {

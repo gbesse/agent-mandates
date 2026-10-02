@@ -6,4 +6,5 @@ const authority = createAuthority({ secret: randomBytes(32) });
 const token = await authority.issue(exampleGrant());
 const first = await authority.reserve(token, exampleAction);
 const replay = await authority.reserve(token, exampleAction);
-console.log(JSON.stringify({ source: 'local synthetic demonstration; no external action', first: { status: first.status, execute: first.execute }, replay: { status: replay.status, execute: replay.execute }, usage: authority.inspect(token).usage }, null, 2));
+const inspection = authority.inspect(token);
+console.log(JSON.stringify({ source: 'local synthetic demonstration; no external action', first: { status: first.status, execute: first.execute }, replay: { status: replay.status, execute: replay.execute }, usage: inspection.usage, remaining: inspection.remaining }, null, 2));

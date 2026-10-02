@@ -23,7 +23,9 @@ test('same request id is not charged or executable twice', async () => {
   const { authority, token } = await setup();
   assert.equal((await authority.reserve(token, exampleAction)).execute, true);
   assert.equal((await authority.reserve(token, exampleAction)).execute, false);
-  assert.deepEqual(authority.inspect(token).usage, { calls: 1, budgetMinor: 200 });
+  const inspection = authority.inspect(token);
+  assert.deepEqual(inspection.usage, { calls: 1, budgetMinor: 200 });
+  assert.deepEqual(inspection.remaining, { calls: 2, budgetMinor: 800 });
   await assert.rejects(authority.reserve(token, { ...exampleAction, costMinor: 201 }), /different content/);
 });
 test('delegation cannot widen scope, budget or validity', async () => {
@@ -37,6 +39,7 @@ test('sibling delegates share the parent budget and call limit', async () => {
   const { authority, token } = await setup();
   const children = await Promise.all(['child-a', 'child-b'].map(subject => authority.delegate(token, { ...exampleGrant(now), subject })));
   await authority.reserve(children[0], { ...exampleAction, actor: 'child-a', costMinor: 600 });
+  assert.deepEqual(authority.inspect(children[1]).remaining, { calls: 2, budgetMinor: 400 });
   await assert.rejects(authority.reserve(children[1], { ...exampleAction, requestId: 'b', actor: 'child-b', costMinor: 600 }), /limit/);
   assert.equal(authority.inspect(token).usage.budgetMinor, 600);
 });

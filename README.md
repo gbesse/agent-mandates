@@ -19,7 +19,7 @@ node bin/agent-mandates.mjs reserve local-data/authority1.json local-data/action
 node bin/agent-mandates.mjs inspect local-data/authority2.json
 ```
 
-The repeated request returns `execute: false` and the charge remains 200 minor units. Example grants expire one hour after fixture generation. Preserve the signing key for the session; do not commit it or the signed authority files.
+The repeated request returns `execute: false`; the charge remains 200 minor units, and `remaining` reports two calls and 800 minor units. Example grants expire one hour after fixture generation. Preserve the signing key for the session; do not commit it or the signed authority files.
 
 **The file CLI is a sequential demonstration.** Always use its newest snapshot. Copying an old file or using two authority processes can reuse a budget. Use an authoritative durable store with compare-and-swap revisions for real gateways; see [the persistence contract](docs/persistence.md).
 
@@ -52,7 +52,7 @@ if (reservation.execute) {
 }
 ```
 
-`store` and `executeApprovedTool` are host integration points, not bundled implementations. [Public types](src/index.d.mts) define the required grant and request fields. `delegate`, `inspect`, `revoke`, `snapshot` and `audit` complete the API. Revoking a parent invalidates descendants. `parameters` can bind JSON tool arguments into the request digest.
+`store` and `executeApprovedTool` are host integration points, not bundled implementations. [Public types](src/index.d.mts) define the required grant and request fields. `delegate`, `inspect`, `revoke`, `snapshot` and `audit` complete the API. `inspect` reports both usage under that mandate and the effective remaining calls and budget across its full ancestor chain, so sibling delegates cannot hide shared consumption. Revoking a parent invalidates descendants. `parameters` can bind JSON tool arguments into the request digest.
 
 ## Enforcement contract
 

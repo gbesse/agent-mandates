@@ -2,6 +2,13 @@
 
 Implementation decisions and validation for this project.
 
+## 2026-09-25 — Effective remaining limits
+
+- Add `remaining` to mandate inspection results without changing reservation behavior.
+- Calculate effective calls and budget as the tightest remaining limit across the full delegation chain.
+- Demonstrate the new result offline and cover shared sibling consumption in the test suite.
+- Revalidate declarations, syntax, 17 tests and the offline demo on the maintenance branch.
+
 ## 2026-09-21 — First public alpha
 
 - Purpose: Bound agent actions with signed mandates, attenuated delegation and an idempotent budget ledger.
